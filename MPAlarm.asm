@@ -27,7 +27,7 @@ startloop
 	movlw	.200		
 	call    LCD_delay_ms	; Set delay to keep screen on for 200ms
 	
-	; Checking triggers in PORTD
+	; Checking for button signals in PORTD
 	btfsc	PORTD, RD2	; Check if RTCC Alarm Pulse is on
 	call	RTCC_Ring	; If on, ring the buzzer
 	btfsc	PORTD, RD0	; Check if Stop Button is pressed
