@@ -2,6 +2,7 @@ import serial
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Function created to turn 2-digit integers into BCD bytes
 def to_bcd(x):
     tens = int(np.floor(x / 10)) * 16
     ones = x - int(np.floor(x / 10))*10
@@ -18,7 +19,7 @@ from datetime import datetime
 
 now = datetime.now()
 serialPort.write(to_bcd(now.hour))
-plt.pause(0.2)
+plt.pause(0.2)          # Delay so system can run before another signal is sent
 
 now = datetime.now()
 serialPort.write(to_bcd(now.minute))
