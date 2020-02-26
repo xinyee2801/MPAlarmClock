@@ -10,13 +10,12 @@ timetest2   res 1	; Reserve 1 byte for BCD2 test
 RTCC	code
 	
 RTCC_Setup
-	movlw	0x0a		; Move 0x0a into timetest
+	movlw	0x09		; Move 0x0a into timetest
 	movwf	timetest	; To ensure time stays in BCD
 	movlw	0x59		; Move 0x59 into timetest2
 	movwf	timetest2	; To prevent minutes from going beyond 60
 	
 	movlb	0x0f
-	bsf	INTCON, GIE
 	movlw	0x55	    		; RTCWREN enable routine 
 	movwf	EECON2	   		; Refer page 230 of Family Data Sheet
 	movlw	0xAA
@@ -37,33 +36,30 @@ RTCC_Setup
 	call	UART_Receive_Byte	
 	movwf	RTCVALL			; Updates current second from UART
 	bsf	RTCCFG, RTCOE		; Enables actual RTCC output	
-	bsf	RTCCFG, RTCSYNC		; 
 	
 	; Alarm to be changed manually here
 	bsf	ALRMCFG, ALRMPTR0	
 	bcf	ALRMCFG, ALRMPTR1	; Set pointer to hour
-	movlw	0x15			
+	movlw	0x18			
 	movwf	ALRMVALL		; Set hour to 15
 	bcf	ALRMCFG, ALRMPTR0	
 	bcf	ALRMCFG, ALRMPTR1	; Set pointer to minutes and seconds
-	movlw	0x59			
+	movlw	0x04			
 	movwf	ALRMVALH		; Set minutes to 59
 	movlw	0x00			
 	movwf	ALRMVALL		; Set seconds to 00
 		
-	movlw	0x0C
-	movwf	ALRMRPT
 	bsf	ALRMCFG, AMASK1
-	bsf	ALRMCFG, AMASK2
-	bsf	ALRMCFG, ALRMEN
+	bsf	ALRMCFG, AMASK2		; Ring the alarm only once a day
+	bsf	ALRMCFG, CHIME		; Turn CHIME on, ALRMEN won't turn off
+	bsf	ALRMCFG, ALRMEN		; Enable alarm
 	bcf	TRISD, RD3		; Set RD3 as output	
-	bsf	PORTD, RD3
+	bsf	PORTD, RD3		; Turn RD3 on, as alarm is on
 	
 	; PWM setup
 	bsf	TRISD, RD0
 	bsf	TRISD, RD1
-	bSf	TRISD, RD2
-	
+	bsf	TRISD, RD2		; Set pins as output
 	movlw	0xff
 	movwf	PR2 
 	bsf	CCP4CON, DC4B0
@@ -75,8 +71,6 @@ RTCC_Setup
 	bcf	T2CON, TMR2ON
 	bsf	CCP4CON, CCP4M3
 	bsf	CCP4CON, CCP4M2
-	bsf	INTCON, TMR0IE
-	bsf	INTCON, GIE
 	
 	return
 
@@ -100,10 +94,10 @@ RTCC_Snooze
 	bcf	ALRMCFG, ALRMPTR0	; Set pointer to minutes and seconds
 	bcf	ALRMCFG, ALRMPTR1		
 	movlw	0x05			; Snooze 5 minutes from button press
-	addwf	ALRMVALH, RTCVALH
-	movlw	0x0f
-	andwf	ALRMVALH, W
-	cpfsgt	timetest
+	addwf	ALRMVALH
+	movlw	0x0f		
+	andwf	ALRMVALH, W		; Obtain ones value of ALRMVALH
+	cpfsgt	timetest		; check if ones is greater than 
 	call	BCD			; Subroutine to keep time in BCD
 	movff	RTCVALL, ALRMVALL	
 	bsf	ALRMCFG, ALRMEN		; Enable the alarm
