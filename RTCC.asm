@@ -61,16 +61,16 @@ RTCC_Setup
 	bsf	TRISD, RD1
 	bsf	TRISD, RD2		; Set pins as output
 	movlw	0xff
-	movwf	PR2 
+	movwf	PR2			; Set PWM period
 	bsf	CCP4CON, DC4B0
-	bsf	CCP4CON, DC4B1
+	bsf	CCP4CON, DC4B1		; Set PWM duty cycle
 	movlw	0x07
-	movwf	CCPR4L
-	bcf	TRISG, RG3
-	bsf	T2CON, T2CKPS1
-	bcf	T2CON, TMR2ON
-	bsf	CCP4CON, CCP4M3
-	bsf	CCP4CON, CCP4M2
+	movwf	CCPR4L			; Set PWM duty cycle (10 bits)
+	bcf	TRISG, RG3		; CCP4 pin output
+	bsf	T2CON, T2CKPS1		; Set TMR2 prescale value
+	bcf	T2CON, TMR2ON		; Disable the buzzer
+	bsf	CCP4CON, CCP4M3		
+	bsf	CCP4CON, CCP4M2		; Configure module for PWM operation
 	
 	return
 
@@ -97,9 +97,9 @@ RTCC_Snooze
 	addwf	ALRMVALH
 	movlw	0x0f		
 	andwf	ALRMVALH, W		; Obtain ones value of ALRMVALH
-	cpfsgt	timetest		; check if ones is greater than 
+	cpfsgt	timetest		; Check if ones is greater than 
 	call	BCD			; Subroutine to keep time in BCD
-	movff	RTCVALL, ALRMVALL	
+	movff	RTCVALL, ALRMVALL	; Update seconds for snooze
 	bsf	ALRMCFG, ALRMEN		; Enable the alarm
 	return
 	
@@ -108,7 +108,7 @@ BCD	movlw	0x10
 	movlw	0x0a
 	subwf	ALRMVALH
 	movf	ALRMVALH, W
-	cpfsgt	timetest2
+	cpfsgt	timetest2		; Check if minutes greater than 59
 	call	BCD2	
 	return
 
