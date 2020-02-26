@@ -52,32 +52,32 @@ start2	lfsr	FSR0, myArray2	; Load FSR0 with address in RAM
 	movlw	myTable_2	; Bytes to read
 	movwf 	counter		; The counter register
 
-loop2 	tblrd*+			; one byte from PM to TABLAT, increment TBLPRT
-	movff	TABLAT, POSTINC0; move data from TABLAT to (FSR0), inc FSR0	
-	decfsz	counter		; count down to zero
-	bra	loop2		; keep going until finished
+loop2 	tblrd*+			; One byte from PM to TABLAT, increment TBLPRT
+	movff	TABLAT, POSTINC0; Move data from TABLAT to (FSR0), inc FSR0	
+	decfsz	counter		; Count down to zero
+	bra	loop2		; Keep going until finished
 	
 start3	lfsr	FSR0, myArray3	; Load FSR0 with address in RAM	
-	movlw	upper(myTable3)	; address of data in PM
-	movwf	TBLPTRU		; load upper bits to TBLPTRU
-	movlw	high(myTable3)	; address of data in PM
-	movwf	TBLPTRH		; load high byte to TBLPTRH
-	movlw	low(myTable3)	; address of data in PM
-	movwf	TBLPTRL		; load low byte to TBLPTRL
-	movlw	myTable_3	; bytes to read
-	movwf 	counter		; our counter register
+	movlw	upper(myTable3)	; Address of data in PM
+	movwf	TBLPTRU		; Load upper bits to TBLPTRU
+	movlw	high(myTable3)	; Address of data in PM
+	movwf	TBLPTRH		; Load high byte to TBLPTRH
+	movlw	low(myTable3)	; Address of data in PM
+	movwf	TBLPTRL		; Load low byte to TBLPTRL
+	movlw	myTable_3	; Bytes to read
+	movwf 	counter		; The counter register
 
-loop3 	tblrd*+			; one byte from PM to TABLAT, increment TBLPRT
-	movff	TABLAT, POSTINC0; move data from TABLAT to (FSR0), inc FSR0	
-	decfsz	counter		; count down to zero
-	bra	loop3		; keep going until finished
+loop3 	tblrd*+			; One byte from PM to TABLAT, increment TBLPRT
+	movff	TABLAT, POSTINC0; Move data from TABLAT to (FSR0), inc FSR0	
+	decfsz	counter		; Count down to zero
+	bra	loop3		; Keep going until finished
 	return
 
 DISPLAY_Time
 	call	LCD_clear
-	movlw	myTable_l -1	    ; output message to LCD (leave out "\n")
+	movlw	myTable_l -1	    ; Output message to LCD (leave out "\n")
 	lfsr	FSR2, myArray	
-	call	LCD_Write_Message   ; write 'Time:  '
+	call	LCD_Write_Message   ; Write 'Time:  '
 	bsf	RTCCFG, RTCPTR0
 	bcf	RTCCFG, RTCPTR1	
 	movf	RTCVALL, W	    ; Display hours
@@ -95,17 +95,17 @@ DISPLAY_Time
 	return
 	
 DISPLAY_Alarm
-	call	LCD_line2	    ; Display 'Alarm: '
+	call	LCD_line2	    
 	movlw	myTable_2 -1	    
 	lfsr	FSR2, myArray2	
-	call	LCD_Write_Message   ; write 'Time:  '
+	call	LCD_Write_Message   ; Display 'Alarm: '
 	btfsc	PORTD, RD3
 	bra	Alarm_Set
 	
 Alarm_Not_Set
 	movlw	myTable_3 -1	    ; output message to LCD (leave out "\n")
 	lfsr	FSR2, myArray3
-	call	LCD_Write_Message   ; write 'Time:  '
+	call	LCD_Write_Message   ; write 'OFF'
 	return
 	
 Alarm_Set
