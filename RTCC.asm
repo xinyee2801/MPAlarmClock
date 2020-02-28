@@ -40,13 +40,13 @@ RTCC_Setup
 	; Alarm to be changed manually here
 	bsf	ALRMCFG, ALRMPTR0	
 	bcf	ALRMCFG, ALRMPTR1	; Set pointer to hour
-	movlw	0x18			
+	movlw	0x14			
 	movwf	ALRMVALL		; Set hour to 15
 	bcf	ALRMCFG, ALRMPTR0	
 	bcf	ALRMCFG, ALRMPTR1	; Set pointer to minutes and seconds
-	movlw	0x04			
+	movlw	0x50			
 	movwf	ALRMVALH		; Set minutes to 59
-	movlw	0x00			
+	movlw	0x30			
 	movwf	ALRMVALL		; Set seconds to 00
 		
 	bsf	ALRMCFG, AMASK1
