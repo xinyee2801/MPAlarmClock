@@ -21,8 +21,8 @@ myTable2
 	data	    "Alarm: \n"		; Message, plus carriage return
 	constant    myTable_2=.8	; Length of data 
 myTable3
-	data	    "OFF\n"		; Message, plus carriage return
-	constant    myTable_3=.4	; Length of data 
+	data	    "OFF     \n"	; Message, plus carriage return
+	constant    myTable_3=.9	; Length of data 
 
 DISPLAY	code
 	
