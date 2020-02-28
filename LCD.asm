@@ -1,7 +1,7 @@
 #include p18f87k22.inc
 
     global  LCD_Setup, LCD_Write_Message, LCD_delay_ms, LCD_Send_Byte_D
-    global  LCD_Write_Hex, LCD_clear, LCD_line2
+    global  LCD_Write_Hex, LCD_clear, LCD_line2, LCD_hide, LCD_time, LCD_alarm
 
 acs0    udata_acs   ; Named variables in access ram
 LCD_cnt_l   res 1   ; Reserve 1 byte for variable LCD_cnt_l
@@ -158,6 +158,27 @@ LCD_line2			; Set DDRAM to start of line 2
 	movlw	.10
 	call	LCD_delay_x4us
 	return
+	
+LCD_hide			; Set DDRAM out of screen
+	movlw	b'10010000'
+	call	LCD_Send_Byte_I
+	movlw	.10
+	call	LCD_delay_x4us
+	return
+	
+LCD_time			; Set DDRAM to write time
+	movlw	b'10000111'
+	call	LCD_Send_Byte_I
+	movlw	.10
+	call	LCD_delay_x4us
+	return	
+	
+LCD_alarm			; Set DDRAM to write alarm
+	movlw	b'11000111'
+	call	LCD_Send_Byte_I
+	movlw	.10
+	call	LCD_delay_x4us
+	return	
 	
 LCD_clear			; Clear screen
 	movlw	b'00000001'	; Display clear
