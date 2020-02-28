@@ -37,17 +37,17 @@ RTCC_Setup
 	movwf	RTCVALL			; Updates current second from UART
 	bsf	RTCCFG, RTCOE		; Enables actual RTCC output	
 	
-	; Alarm to be changed manually here
+	; Alarm to be changed here, time written as binary coded decimal
 	bsf	ALRMCFG, ALRMPTR0	
 	bcf	ALRMCFG, ALRMPTR1	; Set pointer to hour
 	movlw	0x14			
-	movwf	ALRMVALL		; Set hour to 15
+	movwf	ALRMVALL		; Set hour to 14
 	bcf	ALRMCFG, ALRMPTR0	
 	bcf	ALRMCFG, ALRMPTR1	; Set pointer to minutes and seconds
-	movlw	0x50			
-	movwf	ALRMVALH		; Set minutes to 59
-	movlw	0x30			
-	movwf	ALRMVALL		; Set seconds to 00
+	movlw	0x43			
+	movwf	ALRMVALH		; Set minutes to 43
+	movlw	0x20			
+	movwf	ALRMVALL		; Set seconds to 20
 		
 	bsf	ALRMCFG, AMASK1
 	bsf	ALRMCFG, AMASK2		; Ring the alarm only once a day
