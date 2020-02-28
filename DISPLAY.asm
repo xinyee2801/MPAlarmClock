@@ -2,7 +2,7 @@
     
     global	DISPLAY_Setup, DISPLAY_Time, DISPLAY_Alarm
     extern	LCD_Write_Hex, LCD_Send_Byte_D, LCD_Write_Message
-    extern	LCD_clear, LCD_line2
+    extern	LCD_clear, LCD_line2, LCD_hide, LCD_time, LCD_alarm
 	
 acs0	 udata_acs	; Reserve data space in access ram
 counter	 res 1		; Reserve one byte for a counter variable
@@ -71,13 +71,19 @@ loop3 	tblrd*+			; One byte from PM to TABLAT, increment TBLPRT
 	movff	TABLAT, POSTINC0; Move data from TABLAT to (FSR0), inc FSR0	
 	decfsz	counter		; Count down to zero
 	bra	loop3		; Keep going until finished
-	return
-
-DISPLAY_Time
-	call	LCD_clear
+	
+SetDisplay		
 	movlw	myTable_l -1	    ; Output message to LCD (leave out "\n")
 	lfsr	FSR2, myArray	
 	call	LCD_Write_Message   ; Write 'Time:  '
+	call	LCD_line2	    
+	movlw	myTable_2 -1	    
+	lfsr	FSR2, myArray2	
+	call	LCD_Write_Message   ; Display 'Alarm: '
+	return
+
+DISPLAY_Time
+	call	LCD_time
 	bsf	RTCCFG, RTCPTR0
 	bcf	RTCCFG, RTCPTR1	
 	movf	RTCVALL, W	    ; Display hours
@@ -95,17 +101,14 @@ DISPLAY_Time
 	return
 	
 DISPLAY_Alarm
-	call	LCD_line2	    
-	movlw	myTable_2 -1	    
-	lfsr	FSR2, myArray2	
-	call	LCD_Write_Message   ; Display 'Alarm: '
+	call	LCD_alarm
 	btfsc	PORTD, RD3
-	bra	Alarm_Set
-	
+	bra	Alarm_Set	
 Alarm_Not_Set
-	movlw	myTable_3 -1	    ; output message to LCD (leave out "\n")
+	movlw	myTable_3 -1	    ; Output message to LCD (leave out "\n")
 	lfsr	FSR2, myArray3
-	call	LCD_Write_Message   ; write 'OFF'
+	call	LCD_Write_Message   ; Write 'OFF'
+	call	LCD_hide	    ; Hide Cursor
 	return
 	
 Alarm_Set
@@ -123,6 +126,7 @@ Alarm_Set
 	call	LCD_Send_Byte_D
 	movf	ALRMVALL, W	    ; Display minutes
 	call	LCD_Write_Hex	
+	call	LCD_hide	    ; Hide cursor
 	return
 	
 	end
