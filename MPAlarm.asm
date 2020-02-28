@@ -30,8 +30,8 @@ startloop
 	call    LCD_delay_ms	; Set delay to keep screen on for 250ms
 	movlw	.250		
 	call    LCD_delay_ms	; Set delay to keep screen on for 250ms
-	movlw	.249		
-	call    LCD_delay_ms	; Set delay to keep screen on for 249ms
+	movlw	.247		
+	call    LCD_delay_ms	; Set delay to keep screen on for 247ms
 	
 	; Checking for button signals in PORTD
 	btfsc	PORTD, RD2	; Check if RTCC Alarm Pulse is on
