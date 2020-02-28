@@ -24,8 +24,14 @@ setup	bcf	EECON1, CFGS	; Point to Flash program memory
 startloop
 	call	DISPLAY_Time	; Display the current time using subroutine
 	call	DISPLAY_Alarm	; Display the alarm (if on) using subroutine
-	movlw	.200		
-	call    LCD_delay_ms	; Set delay to keep screen on for 200ms
+	movlw	.250		
+	call    LCD_delay_ms	; Set delay to keep screen on for 250ms
+	movlw	.250		
+	call    LCD_delay_ms	; Set delay to keep screen on for 250ms
+	movlw	.250		
+	call    LCD_delay_ms	; Set delay to keep screen on for 250ms
+	movlw	.249		
+	call    LCD_delay_ms	; Set delay to keep screen on for 249ms
 	
 	; Checking for button signals in PORTD
 	btfsc	PORTD, RD2	; Check if RTCC Alarm Pulse is on
